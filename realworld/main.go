@@ -52,9 +52,7 @@ type GeoIP struct {
 }
 
 func myIPCache1(c *fiber.Ctx) error {
-	client := &http.Client{}
-
-	resp, err := client.Get("http://ip-api.com/json/")
+	resp, err := http.Get("http://ip-api.com/json/")
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to fetch IP information")
 	}
@@ -70,7 +68,7 @@ func myIPCache1(c *fiber.Ctx) error {
 
 func findIP1(c *fiber.Ctx) error {
 	geoIP := GeoIP{}
-	
+
 	if err := c.BodyParser(&geoIP); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input JSON"})
 	}

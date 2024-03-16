@@ -34,12 +34,12 @@ func main() {
 
 	// Define routes
 	app.Get("/myip", myIPCache1)
-	app.Get("/myip2", func(c *fiber.Ctx) error {
+	app.Get("/myipcache2", func(c *fiber.Ctx) error {
 		return myIPCache2(c, ctx, rdb)
 	})
 	app.Post("/findip", findIP1)
-	app.Post("/findip2", func(c *fiber.Ctx) error {
-		return findIP2(c, ctx, rdb)
+	app.Post("/findipcache2", func(c *fiber.Ctx) error {
+		return findIPCache2(c, ctx, rdb)
 	})
 
 	// Start Fiber server
@@ -131,7 +131,7 @@ func myIPCache2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	return c.Status(statusCode).JSON(ipAddress)
 }
 
-func findIP2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
+func findIPCache2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	geoIP := GeoIP{}
 
 	if err := c.BodyParser(&geoIP); err != nil {

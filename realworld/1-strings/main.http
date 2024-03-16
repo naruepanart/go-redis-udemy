@@ -9,6 +9,10 @@ GET http://{{host}}/myip
 Content-Type: {{contentType}}
 
 ###
+GET http://{{host}}/myipcache2
+Content-Type: {{contentType}}
+
+###
 POST http://{{host}}/findip
 Content-Type: {{contentType}}
 
@@ -17,12 +21,7 @@ Content-Type: {{contentType}}
 }
 
 ###
-GET http://{{host}}/myip2
-Content-Type: {{contentType}}
-
-
-###
-POST http://{{host}}/findip2
+POST http://{{host}}/findipcache2
 Content-Type: {{contentType}}
 
 {

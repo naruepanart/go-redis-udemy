@@ -1,0 +1,31 @@
+@hostname = localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+
+###
+GET http://{{host}}/myip
+Content-Type: {{contentType}}
+
+###
+POST http://{{host}}/findip
+Content-Type: {{contentType}}
+
+{
+    "ip": "104.28.246.185"
+}
+
+###
+GET http://{{host}}/myip2
+Content-Type: {{contentType}}
+
+
+###
+POST http://{{host}}/findip2
+Content-Type: {{contentType}}
+
+{
+    "ip": "104.28.246.181"
+}
+

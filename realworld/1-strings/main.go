@@ -113,7 +113,10 @@ func myIPCache2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to retrieve cached IP information"})
 	}
 
-	if err := json.Unmarshal([]byte(cachedIP), &ipAddress); err == nil {
+	if cachedIP != "" {
+		if err := json.Unmarshal([]byte(cachedIP), &ipAddress); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal IP information"})
+		}
 		return c.JSON(ipAddress)
 	}
 
@@ -145,7 +148,10 @@ func findIPCache2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 
 	ipAddress := IPAddress{}
 
-	if err := json.Unmarshal([]byte(cachedIP), &ipAddress); err == nil {
+	if cachedIP != "" {
+		if err := json.Unmarshal([]byte(cachedIP), &ipAddress); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal cached IP information"})
+		}
 		return c.JSON(ipAddress)
 	}
 
@@ -153,7 +159,7 @@ func findIPCache2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	statusCode, body, _ := req.Bytes()
 
 	if err := json.Unmarshal(body, &ipAddress); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal IP information"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal IP information from external API"})
 	}
 
 	if err := rdb.Set(ctx, geoIP.IP, body, 0).Err(); err != nil {

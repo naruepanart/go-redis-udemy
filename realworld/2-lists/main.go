@@ -56,7 +56,7 @@ func findPosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 
 	// Retrieve page number and count of posts per page from query parameters
 	page, _ := strconv.Atoi(c.Query("page", "1"))   // Convert page parameter to integer, default to 1 if not provided
-	count, _ := strconv.Atoi(c.Query("count", "5")) // Convert count parameter to integer, default to 10 if not provided
+	count, _ := strconv.Atoi(c.Query("count", "5")) // Convert count parameter to integer, default to 5 if not provided
 
 	// Calculate start and end indexes based on page and count
 	start := (int64(page) - 1) * int64(count) // Calculate start index

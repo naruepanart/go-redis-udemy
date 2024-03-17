@@ -1,0 +1,19 @@
+@hostname = localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+###
+GET http://{{host}}/posts?page=3
+Content-Type: {{contentType}}
+
+
+###
+POST http://{{host}}/posts
+Content-Type: {{contentType}}
+
+{
+    "key": "keykeykey11",
+    "value": "valuevaluevaluevalue1"
+}
+

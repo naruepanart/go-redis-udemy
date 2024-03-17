@@ -3,11 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"log"
-	"strconv"
-
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
+	"log"
+	"strconv"
 )
 
 func main() {
@@ -37,6 +36,9 @@ func main() {
 	})
 	app.Post("/posts", func(c *fiber.Ctx) error {
 		return createPosts(c, ctx, rdb)
+	})
+	app.Delete("/posts", func(c *fiber.Ctx) error {
+		return deletePosts(c, ctx, rdb)
 	})
 
 	// Start Fiber server
@@ -114,3 +116,37 @@ func createPosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	// If successful, return a 201 Created status without any additional data.
 	return c.SendStatus(fiber.StatusCreated)
 }
+
+func deletePosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
+	// Create an empty struct to store posts.
+	posts := Posts{}
+
+	// Parse the request body and store it in the posts struct.
+	if err := c.BodyParser(&posts); err != nil {
+		// Return an error response if the input JSON is invalid.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Invalid input JSON"})
+	}
+
+	// Convert the posts struct to JSON format.
+	data, err := json.Marshal(posts)
+	if err != nil {
+		// Return an error response if there is an error in JSON marshaling.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	// Remove posts from the Redis list with the specified key.
+	// LRem is a Redis command used to remove elements from a list.
+	val, err := rdb.LRem(ctx, "Keyyy", 1, data).Result()
+	if err != nil {
+		// Return an error response if there is an error in deleting posts.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	// If no posts were removed, return a 404 Not Found status.
+	if val == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No posts found to delete"})
+	}
+
+	// If successful, return a 200 OK status without any additional data.
+	return c.SendStatus(fiber.StatusOK)
+}
+

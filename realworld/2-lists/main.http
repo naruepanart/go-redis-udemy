@@ -4,16 +4,24 @@
 @contentType = application/json
 
 ###
-GET http://{{host}}/posts?page=3
+GET http://{{host}}/posts?page=1
 Content-Type: {{contentType}}
-
 
 ###
 POST http://{{host}}/posts
 Content-Type: {{contentType}}
 
 {
-    "key": "keykeykey11",
+    "key": "keykeykey29",
+    "value": "valuevaluevaluevalue1"
+}
+
+###
+DELETE http://{{host}}/posts
+Content-Type: {{contentType}}
+
+{
+    "key": "keykeykey27",
     "value": "valuevaluevaluevalue1"
 }
 

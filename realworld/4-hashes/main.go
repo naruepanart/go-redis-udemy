@@ -23,10 +23,10 @@ func main() {
 	defer cancel()
 
 	// Flush all keys from the database (optional)
-	/* err := rdb.FlushAll(ctx).Err()
+	err := rdb.FlushAll(ctx).Err()
 	if err != nil {
 		log.Fatal(err)
-	} */
+	}
 
 	// Define routes
 	app.Get("/like", func(c *fiber.Ctx) error {

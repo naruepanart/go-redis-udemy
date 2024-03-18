@@ -1,0 +1,35 @@
+@hostname = localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+###
+GET http://{{host}}/like
+Content-Type: {{contentType}}
+
+{
+    "id": "6011141012058"
+}
+
+###
+POST http://{{host}}/like
+Content-Type: {{contentType}}
+
+{
+    "id": "6011141012058"
+}
+
+
+###
+PUT http://{{host}}/users-profile
+Content-Type: {{contentType}}
+
+{
+    "id": "11",
+    "name": "name-abcedj",
+    "email": "test-email-108@gmail.com",
+    "visitors_count": 10,
+    "likes_count": 10
+}
+
+

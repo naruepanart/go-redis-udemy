@@ -105,10 +105,10 @@ type IPAddress struct {
 }
 
 func myIPCache2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
-	myIPKey := "myIP"
+	KEY_MYIP := "myIP"
 	ipAddress := IPAddress{}
 
-	cachedIP, err := rdb.Get(ctx, myIPKey).Result()
+	cachedIP, err := rdb.Get(ctx, KEY_MYIP).Result()
 	if err != nil && err != redis.Nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to retrieve cached IP information"})
 	}
@@ -127,7 +127,7 @@ func myIPCache2(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal IP information"})
 	}
 
-	if err := rdb.Set(ctx, myIPKey, body, 0).Err(); err != nil {
+	if err := rdb.Set(ctx, KEY_MYIP, body, 0).Err(); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to cache IP information"})
 	}
 

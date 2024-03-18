@@ -50,6 +50,8 @@ type Posts struct {
 	Value string `json:"value"`
 }
 
+const KEY_TESTER = "KEY_TESTER"
+
 // Function to find posts
 func findPosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	// Initialize variables to store a single post and an array of posts
@@ -65,7 +67,7 @@ func findPosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	end := int64(page)*int64(count) - 1       // Calculate end index
 
 	// Retrieve posts from Redis database within the specified range
-	postJSON, err := rdb.LRange(ctx, "Keyyy", start, end).Result() // Retrieve posts from Redis
+	postJSON, err := rdb.LRange(ctx, KEY_TESTER, start, end).Result() // Retrieve posts from Redis
 	if err != nil {
 		// If there's an error, return an internal server error response
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
@@ -97,7 +99,7 @@ func createPosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	}
 
 	// Convert the posts struct to JSON format.
-	data, err := json.Marshal(posts)
+	data, err := json.Marshal(&posts)
 	if err != nil {
 		// Return an error response if there is an error in JSON marshaling.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
@@ -108,7 +110,7 @@ func createPosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	}
 
 	// Push the JSON data onto the left end of a Redis list with a specific key.
-	if err := rdb.LPush(ctx, "Keyyy", data).Err(); err != nil {
+	if err := rdb.LPush(ctx, KEY_TESTER, data).Err(); err != nil {
 		// Return an error response if there is an error in pushing data to Redis.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -128,7 +130,7 @@ func deletePosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	}
 
 	// Convert the posts struct to JSON format.
-	data, err := json.Marshal(posts)
+	data, err := json.Marshal(&posts)
 	if err != nil {
 		// Return an error response if there is an error in JSON marshaling.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
@@ -136,7 +138,7 @@ func deletePosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 
 	// Remove posts from the Redis list with the specified key.
 	// LRem is a Redis command used to remove elements from a list.
-	val, err := rdb.LRem(ctx, "Keyyy", 1, data).Result()
+	val, err := rdb.LRem(ctx, KEY_TESTER, 1, data).Result()
 	if err != nil {
 		// Return an error response if there is an error in deleting posts.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
@@ -149,4 +151,3 @@ func deletePosts(c *fiber.Ctx, ctx context.Context, rdb *redis.Client) error {
 	// If successful, return a 200 OK status without any additional data.
 	return c.SendStatus(fiber.StatusOK)
 }
-

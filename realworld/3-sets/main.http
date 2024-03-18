@@ -1,0 +1,19 @@
+@hostname = localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+###
+GET http://{{host}}/votes
+Content-Type: {{contentType}}
+
+###
+POST http://{{host}}/votes
+Content-Type: {{contentType}}
+
+{
+    "id": "6011141012058735",
+    "value": "AAAAAAA ABC"
+}
+
+

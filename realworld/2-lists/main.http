@@ -7,12 +7,13 @@
 GET http://{{host}}/posts?page=1
 Content-Type: {{contentType}}
 
+
 ###
 POST http://{{host}}/posts
 Content-Type: {{contentType}}
 
 {
-    "key": "keykeykey29",
+    "key": "keykeykey9",
     "value": "valuevaluevaluevalue1"
 }
 
